@@ -11,7 +11,7 @@ import com.revature.util.ConnectionFactory;
 public class RequestDao {
 
     public boolean insertRequest(Request r){
-        String sql = "INSERT INTO project1.request (user_id, r_type, amount, status) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO project1.request (user_id, r_type, amount, r_status) VALUES (?, ?, ?, ?)";
         Connection connection = ConnectionFactory.getConnection();
 
         try(PreparedStatement ps = connection.prepareStatement(sql)){ //connection will be closed after we are done!
@@ -44,7 +44,7 @@ public class RequestDao {
 
                 Request t = new Request(rs.getInt("request_id"),
                         rs.getString("user_id"),
-                        rs.getString("r_type"),,
+                        rs.getString("r_type"),
                         rs.getDouble("amount"),
                         rs.getString("r_status"));
 
@@ -70,7 +70,7 @@ public class RequestDao {
 
                 Request t = new Request(rs.getInt("request_id"),
                         rs.getString("user_id"),
-                        rs.getString("r_type"),,
+                        rs.getString("r_type"),
                         rs.getDouble("amount"),
                         rs.getString("r_status"));
 
@@ -83,37 +83,34 @@ public class RequestDao {
         return rList;
     }
 
-    public Request getRequestById(int requestId){
-        String sql = "SELECT * FROM project1.users WHERE (request_id) = (?)";
+    public List<Integer> getRequestIds(){
+        List<Integer> rList = new ArrayList<>();
+        String sql = "SELECT request_id FROM project1.request";
         Connection connection = ConnectionFactory.getConnection();
 
-        try {
-            PreparedStatement ps = connection.prepareStatement(sql);
-            ps.setInt(1, requestId);
+        try(PreparedStatement ps = connection.prepareStatement(sql)) {
+
             ResultSet rs = ps.executeQuery();
-            rs.next();
-            return new Request(rs.getInt("request_id"),
-                    rs.getString("user_id"),
-                    rs.getString("r_type"),,
-                    rs.getDouble("amount"),
-                    rs.getString("r_status"));
 
+            while(rs.next()) {
 
+                rList.add(rs.getInt("request_id"));
+
+            }
         }catch(SQLException e) {
             e.printStackTrace();
         }
-
-        return null;
+        return rList;
     }
 
 
-    public void updateRequest(Request r){
-            String sql = "UPDATE project1.request SET r_status = ? WHERE r_id = ?";
+    public void updateRequest(int requestId, String status){
+            String sql = "UPDATE project1.request SET r_status = ? WHERE request_id = ?";
             Connection connection = ConnectionFactory.getConnection();
 
             try(PreparedStatement ps = connection.prepareStatement(sql)){
-                ps.setString(1, r.getStatus());
-                ps.setInt(2, r.getRequestId());
+                ps.setString(1, status);
+                ps.setInt(2, requestId);
                 ps.executeUpdate();
 
             }catch(SQLException e) {

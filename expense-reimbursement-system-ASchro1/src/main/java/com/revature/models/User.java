@@ -10,6 +10,10 @@ public class User {
 
     private List<Request> requests;
 
+    public User(){
+
+    }
+
     public User(String username, String password, String firstName, String lastName, boolean isManager, List<Request> requests) {
         this.username = username;
         this.password = password;

@@ -12,11 +12,17 @@ public class UserService {
 
     public static RequestDao rDao = new RequestDao();
 
-    public User getUser(String username){
-        User u = uDao.selectUserByUsername(username);
-        List<Request> rList = rDao.selectRequestsByUsername(username);
-        u.setRequests(rList);
-        return u;
+    public static User getUser(String username){
+        List<String> users = uDao.getUsernames();
+        if(users.contains(username)) {
+            User u = uDao.selectUserByUsername(username);
+            List<Request> rList = rDao.selectRequestsByUsername(username);
+            u.setRequests(rList);
+            u.setManager(uDao.isManager(username));
+            return u;
+        }else{
+            return null;
+        }
     }
 
 }

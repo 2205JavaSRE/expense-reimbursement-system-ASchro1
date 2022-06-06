@@ -13,7 +13,7 @@ public class AuthenticationService {
             return false;
         }else {
             User u = uDao.selectUserByUsername(username);
-            return pass.equals(u.getPassword());
+            return u.getPassword().equals(pass);
         }
     }
 }

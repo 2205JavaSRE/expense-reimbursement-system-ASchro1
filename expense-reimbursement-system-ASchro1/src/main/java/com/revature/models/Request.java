@@ -7,6 +7,10 @@ public class Request {
     private double amount;
     private String status;
 
+    public Request(){
+
+    }
+
     public Request(int requestId, String userId, String type, double amount, String status) {
         this.requestId = requestId;
         this.userId = userId;
