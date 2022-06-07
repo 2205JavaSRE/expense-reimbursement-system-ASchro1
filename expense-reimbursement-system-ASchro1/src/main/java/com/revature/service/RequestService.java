@@ -38,6 +38,14 @@ public class RequestService {
         return true;
     }
 
+    public static List<Request> getAllPastRequests(){
+        return rDao.selectAllPastRequests();
+    }
+
+    public static List<Request> getAllRequests(){
+        return rDao.selectAllRequests();
+    }
+
     public static List<Request> getPendingRequestsByUser(String username){
         List<String> users = uDao.getUsernames();
         if(users.contains(username)) {

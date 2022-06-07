@@ -31,9 +31,60 @@ public class RequestDao {
         return false;
     }
 
+    public List<Request> selectAllRequests(){
+        List<Request> rList = new ArrayList<>();
+        String sql = "SELECT * FROM project1.request";
+        Connection connection = ConnectionFactory.getConnection();
+
+        try(PreparedStatement ps = connection.prepareStatement(sql)) {
+            ResultSet rs = ps.executeQuery();
+
+            while(rs.next()) {
+
+                Request t = new Request(rs.getInt("request_id"),
+                        rs.getString("user_id"),
+                        rs.getString("r_type"),
+                        rs.getDouble("amount"),
+                        rs.getString("r_status"));
+
+                rList.add(t);
+
+            }
+        }catch(SQLException e) {
+            e.printStackTrace();
+        }
+        return rList;
+    }
+
     public List<Request> selectAllPendingRequests(){
         List<Request> rList = new ArrayList<>();
         String sql = "SELECT * FROM project1.request WHERE r_status = ?";
+        Connection connection = ConnectionFactory.getConnection();
+
+        try(PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, "Pending");
+            ResultSet rs = ps.executeQuery();
+
+            while(rs.next()) {
+
+                Request t = new Request(rs.getInt("request_id"),
+                        rs.getString("user_id"),
+                        rs.getString("r_type"),
+                        rs.getDouble("amount"),
+                        rs.getString("r_status"));
+
+                rList.add(t);
+
+            }
+        }catch(SQLException e) {
+            e.printStackTrace();
+        }
+        return rList;
+    }
+
+    public List<Request> selectAllPastRequests(){
+        List<Request> rList = new ArrayList<>();
+        String sql = "SELECT * FROM project1.request WHERE r_status != ?";
         Connection connection = ConnectionFactory.getConnection();
 
         try(PreparedStatement ps = connection.prepareStatement(sql)) {
