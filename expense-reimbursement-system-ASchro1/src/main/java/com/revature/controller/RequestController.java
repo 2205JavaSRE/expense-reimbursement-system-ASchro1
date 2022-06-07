@@ -25,7 +25,8 @@ public class RequestController {
         if(u.isManager()){
             ctx.json(RequestService.getAllRequests());
         }else{
-            ctx.json(u.getRequests());
+            User u1 = UserService.getUser(u.getUsername());
+            ctx.json(u1.getRequests());
         }
         ctx.status(HttpStatus.OK_200);
     }

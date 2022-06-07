@@ -1,14 +1,29 @@
 package com.revature;
 import com.revature.controller.RequestMapping;
-import com.revature.dao.UserDao;
-import com.revature.models.User;
-import com.revature.service.AuthenticationService;
-import com.revature.service.RequestService;
-import com.revature.service.UserService;
+import java.io.File;
+
+import com.revature.util.Monitor;
 import io.javalin.Javalin;
+import io.javalin.plugin.metrics.MicrometerPlugin;
+import io.micrometer.core.instrument.*;
+import io.micrometer.core.instrument.binder.jvm.ClassLoaderMetrics;
+import io.micrometer.core.instrument.binder.jvm.JvmGcMetrics;
+import io.micrometer.core.instrument.binder.jvm.JvmMemoryMetrics;
+import io.micrometer.core.instrument.binder.jvm.JvmThreadMetrics;
+import io.micrometer.core.instrument.binder.system.DiskSpaceMetrics;
+import io.micrometer.core.instrument.binder.system.ProcessorMetrics;
+import io.micrometer.core.instrument.binder.system.UptimeMetrics;
+import io.micrometer.prometheus.PrometheusConfig;
+import io.micrometer.prometheus.PrometheusMeterRegistry;
 public class MainDriver {
     public static void main(String[] args){
-        Javalin myApp = Javalin.create().start(8501);
-        RequestMapping.configureRoutes(myApp);
+        Monitor monitor = new Monitor();
+
+        Javalin myApp = Javalin.create(
+                config -> {
+                    config.registerPlugin(new MicrometerPlugin(monitor.getRegistry()));
+                }
+        ).start(8501);
+        RequestMapping.configureRoutes(myApp, monitor);
     }
 }

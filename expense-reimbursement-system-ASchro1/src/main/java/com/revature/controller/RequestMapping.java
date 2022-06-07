@@ -1,11 +1,13 @@
 package com.revature.controller;
 
+import com.revature.util.Monitor;
 import io.javalin.Javalin;
 import org.eclipse.jetty.http.HttpStatus;
 
 public class RequestMapping {
-    public static void configureRoutes(Javalin app){
+    public static void configureRoutes(Javalin app, Monitor monitor){
         app.post("/login", ctx -> {
+            monitor.incrementCounter();
             AuthenticationController.authenticate(ctx);
         });
 
@@ -78,5 +80,10 @@ public class RequestMapping {
                 ctx.status(HttpStatus.FORBIDDEN_403);
             }
         });
+
+        app.get("/metrics", ctx -> {
+            ctx.result(monitor.getRegistry().scrape());
+        });
+
     }
 }
