@@ -104,7 +104,7 @@ public class RequestController {
         if(u.isManager()){
             Request jData = ctx.bodyAsClass(Request.class);
             if(RequestService.updateRequest(jData.getRequestId(), jData.getStatus())){
-                ctx.status(HttpStatus.ACCEPTED_202);
+                ctx.status(HttpStatus.OK_200);
             }else{
                 ctx.status(HttpStatus.BAD_REQUEST_400);
             }

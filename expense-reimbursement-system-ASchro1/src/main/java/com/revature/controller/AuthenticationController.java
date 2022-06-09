@@ -11,11 +11,11 @@ public class AuthenticationController {
         User login = ctx.bodyAsClass(User.class);
         boolean access = AuthenticationService.authenticateUser(login.getUsername(), login.getPassword());
         if(access){
-            ctx.status(HttpStatus.ACCEPTED_202);
+            ctx.status(HttpStatus.OK_200);
             User u = UserService.getUser(login.getUsername());
             ctx.sessionAttribute("user", u);
         }else {
-            ctx.status(HttpStatus.FORBIDDEN_403);
+            ctx.status(HttpStatus.UNAUTHORIZED_401);
         }
     }
 
