@@ -1,0 +1,10 @@
+FROM maven:3.8.5-openjdk-8 AS MAVEN_BUILD_STAGE
+
+COPY ./ ./
+
+RUN mvn clean package
+
+COPY /target/expense-reimbursement-system-ASchro1-1.0-SNAPSHOT-jar-with-dependencies.jar reimburse.jar
+
+CMD ["java","-jar","reimburse.jar"]
+
